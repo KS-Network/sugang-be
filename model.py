@@ -40,11 +40,16 @@ def verify():
     encoded = request.cookies.get('accessToken')
     if not encoded: return False
     decoded = jwt.decode(encoded, 'JEfWefI0E1qlnIz06qmob7cZp5IzH/i7KwOI2xqWfhE=', algorithms=["HS256"])
-    result = c.execute(
-        'select * from student where student_id=%s;',
-        (decoded['student_id'])
-    )
-    return result
+    try:
+        c.execute(
+            'select * from student where student_id=%s;',
+            (decoded['student_id'], )
+        )
+        result = c.fetchall()
+        return result
+    except Exception as e:
+        print(e)
+        return False
 
 def sign_in(student: Student):
     response = make_response()
@@ -88,3 +93,33 @@ def sign_up(student: Student):
         conn.commit()
     response.data = json.dumps(data)
     return response
+
+def get_lecture(department, grade, professor, title, lecture_id):
+    response = make_response()
+    c.execute(
+        'select * from lecture;'
+    )
+    result = c.fetchall()
+    if result:
+        arr = []
+        for temp in result:
+            lecture = Lecture(
+                department=temp[0],
+                grade=temp[1],
+                credit=temp[2],
+                title=temp[3],
+                lecture_id=temp[4],
+                class_no=temp[5],
+                professor=temp[6],
+                quota=temp[7],
+                attendance=temp[8]
+            )
+            cond_department = department==lecture.department if department else True
+            cond_grade = grade==lecture.grade if grade else True
+            cond_professor = professor==lecture.professor if professor else True
+            cond_title = title in lecture.title if title else True
+            cond_lecture_id = lecture_id==lecture.lecture_id if lecture_id else True
+            if cond_department and cond_grade and cond_professor and cond_title and cond_lecture_id: arr.append(lecture.dict())
+        response.data = json.dumps(arr)
+    return response
+

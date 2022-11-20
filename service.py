@@ -23,3 +23,11 @@ def sign_up(student):
         }
         response = make_response(json.dumps(data), 200)
     return response
+
+def get_lecture(department, grade, professor, title, lecture_id):
+    if model.verify():
+        response = model.get_lecture(department, grade, professor, title, lecture_id)
+        response.status = 200
+        return response
+    else:
+        return make_response('error: verificationException', 401)
