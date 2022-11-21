@@ -5,7 +5,13 @@ from pydantic import BaseModel
 from flask import make_response, request
 import jwt, hashlib
 
-conn = psycopg2.connect(host="localhost", dbname="ks-network", user="blue", password="toor", port="5432")
+conn = psycopg2.connect(
+    host="ks-network-db-main.cos6nwim2e2b.ap-northeast-2.rds.amazonaws.com",
+    dbname="ksnetwork",
+    user="blue",
+    password="toor1234",
+    port="5432"
+)
 c = conn.cursor()
 
 class Student(BaseModel):
