@@ -16,3 +16,8 @@ def sign_up(student: model.Student):
 def get_lecture(department, grade, professor, title, lecture_id):
     data = model.get_lecture(department, grade, professor, title, lecture_id)
     return data
+
+def post_attendance(attendance: model.Attendance):
+    data = model.post_attendance(attendance)
+    return data
+

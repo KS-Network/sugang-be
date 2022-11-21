@@ -120,3 +120,16 @@ def get_lecture(department, grade, professor, title, lecture_id):
         data['data'] = arr
     return data
 
+def post_attendance(attendance: Attendance):
+    data = {'error': None, 'success': False}
+    try:
+        c.execute(
+            'insert into attendance values (%s, %s, %s)',
+            (attendance.lecture_id, attendance.class_no, attendance.student_id)
+        )
+        conn.commit()
+        data['success'] = True
+    except Exception as e:
+        conn.commit()
+    return data
+

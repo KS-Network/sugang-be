@@ -62,3 +62,13 @@ def get_lecture():
     except Exception as e:
         return response_error(response, e)
 
+@bp.route('/attendance', methods=['POST'])
+def post_attendance():
+    response = make_response()
+    attendance = model.Attendance(**request.get_json())
+    try:
+        data = service.post_attendance(attendance)
+        return response_200(response, data)
+    except Exception as e:
+        return response_error(response, e)
+
