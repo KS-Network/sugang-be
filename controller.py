@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, make_response
 from typing import Optional
 import service
 import model
@@ -13,12 +13,15 @@ def hello():
 
 @bp.route('/exception', methods=['GET'])
 def exception():
+    response = make_response()
     e = exceptions.StudentAlreadyExistsError()
-    return {
+    response.data = json.dumps({
         'error': {
             e.__class__.__name__: e.message
         }
-    }
+    })
+    response.status = e.status
+    return response
 
 @bp.route('/sign-in', methods=['POST'])
 def sign_in():
