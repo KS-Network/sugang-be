@@ -54,34 +54,27 @@ def verify():
         result = c.fetchall()
         return result
     except Exception as e:
-        print(e)
         return False
 
 def sign_in(student: Student):
-    response = make_response()
-    data = { 'success': False }
+    data = { 'error': None, 'success': False }
     m = hashlib.sha256()
     m.update(student.password.encode('utf-8'))
     student.password = m.hexdigest()
-    try:
-        c.execute(
-            'select student_id from student where student_id=%s and password=%s;',
-            (student.student_id, student.password)
-        )
-        result = c.fetchall()
-        if result:
-            student_id = result[0][0]
-            encoded = jwt.encode({'student_id': student_id}, 'JEfWefI0E1qlnIz06qmob7cZp5IzH/i7KwOI2xqWfhE=', algorithm='HS256')
-            response.set_cookie('accessToken', encoded, max_age=60*60*2)
-            data['success'] = True
-    except Exception as e:
-        data['error'] = str(e)
-    response.data = json.dumps(data)
-    return response
+    c.execute(
+        'select student_id from student where student_id=%s and password=%s;',
+        (student.student_id, student.password)
+    )
+    result = c.fetchall()
+    if result:
+        student_id = result[0][0]
+        encoded = jwt.encode({'student_id': student_id}, 'JEfWefI0E1qlnIz06qmob7cZp5IzH/i7KwOI2xqWfhE=', algorithm='HS256')
+        response.set_cookie('accessToken', encoded, max_age=60*60*2)
+        data['success'] = True
+    return data
 
 def sign_up(student: Student):
-    response = make_response()
-    data = { 'success': False }
+    data = { 'error': None, 'success': False }
     m = hashlib.sha256()
     m.update(student.password.encode('utf-8'))
     student.password = m.hexdigest()
@@ -95,13 +88,11 @@ def sign_up(student: Student):
         response.set_cookie('accessToken', encoded, max_age=60*60*2)
         data['success'] = True
     except Exception as e:
-        data['error'] = str(e)
         conn.commit()
-    response.data = json.dumps(data)
-    return response
+    return data
 
 def get_lecture(department, grade, professor, title, lecture_id):
-    response = make_response()
+    data = {'error': None, 'data': []}
     c.execute(
         'select * from lecture;'
     )
@@ -126,6 +117,6 @@ def get_lecture(department, grade, professor, title, lecture_id):
             cond_title = title in lecture.title if title else True
             cond_lecture_id = lecture_id==lecture.lecture_id if lecture_id else True
             if cond_department and cond_grade and cond_professor and cond_title and cond_lecture_id: arr.append(lecture.dict())
-        response.data = json.dumps(arr)
-    return response
+        data['data'] = arr
+    return data
 
