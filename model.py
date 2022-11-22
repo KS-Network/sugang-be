@@ -33,7 +33,6 @@ class Lecture(BaseModel):
 
 class Attendance(BaseModel):
     leture_id: str
-    class_no: str
     student_id: str
 
 class Admin(BaseModel):
