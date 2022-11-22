@@ -80,8 +80,8 @@ def sign_up(student: Student):
     student.password = m.hexdigest()
     try:
         c.execute(
-            'insert into student values (%s, %s, %s, %s, %s, %s);',
-            (student.email, student.student_id, student.password, student.name, student.grade, student.credit)
+            'insert into student values (%s, %s, %s, %s, %s);',
+            (student.email, student.student_id, student.password, student.name, student.grade)
         )
         conn.commit()
         encoded = jwt.encode({'student_id': student.student_id}, 'JEfWefI0E1qlnIz06qmob7cZp5IzH/i7KwOI2xqWfhE=', algorithm='HS256')
@@ -107,8 +107,7 @@ def get_lecture(department: str, grade: int, professor: str, title: str, lecture
                 title=temp[3],
                 lecture_id=temp[4],
                 professor=temp[5],
-                quota=temp[6],
-                attendance=temp[7]
+                quota=temp[6]
             )
             cond_department = department==lecture.department if department else True
             cond_grade = grade==lecture.grade if grade else True
@@ -127,8 +126,8 @@ def post_attendance(attendance: Attendance):
     data = {'error': None, 'success': False}
     try:
         c.execute(
-            'insert into attendance values (%s, %s, %s)',
-            (attendance.lecture_id, attendance.class_no, attendance.student_id)
+            'insert into attendance values (%s, %s)',
+            (attendance.lecture_id, attendance.student_id)
         )
         conn.commit()
         data['success'] = True
