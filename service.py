@@ -25,3 +25,7 @@ def post_attendance(attendance: model.Attendance):
     data = model.post_attendance(attendance)
     return data
 
+def delete_attendance(lecture_id: str, student_id: str):
+    data = model.delete_attendance(lecture_id, student_id)
+    return data
+

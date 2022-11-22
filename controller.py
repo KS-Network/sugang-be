@@ -88,3 +88,15 @@ def post_attendance():
     except Exception as e:
         return response_error(response, e)
 
+@bp.route('/attendance', methods=['DELETE'])
+def delete_attendance():
+    response = make_response()
+    args = request.args
+    lecture_id = args.get('lecture_id')
+    student_id = args.get('student_id')
+    try:
+        data = service.delete_attendance(lecture_id, student_id)
+        return response_200(response, data)
+    except Exception as e:
+        return response_error(response, e)
+

@@ -33,7 +33,7 @@ class Lecture(BaseModel):
     attendance: str
 
 class Attendance(BaseModel):
-    leture_id: str
+    lecture_id: str
     student_id: str
 
 class Admin(BaseModel):
@@ -158,6 +158,19 @@ def post_attendance(attendance: Attendance):
         c.execute(
             'insert into attendance values (%s, %s)',
             (attendance.lecture_id, attendance.student_id)
+        )
+        conn.commit()
+        data['success'] = True
+    except Exception as e:
+        conn.commit()
+    return data
+
+def delete_attendance(lecture_id: str, student_id: str):
+    data = {'error': None, 'success': False}
+    try:
+        c.execute(
+            'delete from attendance where lecture_id=%s and student_id=%s',
+            (lecture_id, student_id)
         )
         conn.commit()
         data['success'] = True
