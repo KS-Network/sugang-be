@@ -30,6 +30,7 @@ class Lecture(BaseModel):
     lecture_id: str
     professor: str
     quota: int
+    attendance: str
 
 class Attendance(BaseModel):
     leture_id: str
@@ -38,6 +39,14 @@ class Attendance(BaseModel):
 class Admin(BaseModel):
     email: str
     password: str
+
+def get_attendance(lecture_id: str):
+    c.execute(
+        'select count(*) from attendance where lecture_id=%s;',
+        (lecture_id, )
+    )
+    result = c.fetchall()
+    return int(result[0][0])
 
 def verify():
     encoded = request.cookies.get('accessToken')
@@ -104,7 +113,8 @@ def get_lecture(department: str, grade: str, professor: str, title: str, lecture
                 title=temp[3],
                 lecture_id=temp[4],
                 professor=temp[5],
-                quota=temp[6]
+                quota=temp[6],
+                attendance=get_attendance(temp[4])
             )
             cond_department = department==lecture.department if department else True
             cond_grade = grade==lecture.grade if grade else True
@@ -135,7 +145,8 @@ def get_student_lecture(student_id: str):
                 title=temp[3],
                 lecture_id=temp[4],
                 professor=temp[5],
-                quota=temp[6]
+                quota=temp[6],
+                attendance=get_attendance(temp[4])
             )
             arr.append(lecture.dict())
         data['data'] = arr
