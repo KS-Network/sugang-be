@@ -28,7 +28,6 @@ class Lecture(BaseModel):
     credit: int
     title: str
     lecture_id: str
-    class_no: str
     professor: str
     quota: int
     attendance: int
@@ -69,8 +68,8 @@ def sign_in(student: Student):
     if result:
         student_id = result[0][0]
         encoded = jwt.encode({'student_id': student_id}, 'JEfWefI0E1qlnIz06qmob7cZp5IzH/i7KwOI2xqWfhE=', algorithm='HS256')
-        response.set_cookie('accessToken', encoded, max_age=60*60*2)
         data['success'] = True
+        data['accessToken'] = encoded
     return data
 
 def sign_up(student: Student):
@@ -85,8 +84,8 @@ def sign_up(student: Student):
         )
         conn.commit()
         encoded = jwt.encode({'student_id': student.student_id}, 'JEfWefI0E1qlnIz06qmob7cZp5IzH/i7KwOI2xqWfhE=', algorithm='HS256')
-        response.set_cookie('accessToken', encoded, max_age=60*60*2)
         data['success'] = True
+        data['accessToken'] = encoded
     except Exception as e:
         conn.commit()
     return data
@@ -106,10 +105,9 @@ def get_lecture(department, grade, professor, title, lecture_id):
                 credit=temp[2],
                 title=temp[3],
                 lecture_id=temp[4],
-                class_no=temp[5],
-                professor=temp[6],
-                quota=temp[7],
-                attendance=temp[8]
+                professor=temp[5],
+                quota=temp[6],
+                attendance=temp[7]
             )
             cond_department = department==lecture.department if department else True
             cond_grade = grade==lecture.grade if grade else True
