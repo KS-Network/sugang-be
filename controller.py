@@ -13,6 +13,7 @@ def response_200(response, data):
     return response
 
 def response_error(response, e):
+    print(e)
     response.data = json.dumps({ 'error': { e.__class__.__name__: e.message } })
     response.status = e.status
     return response
@@ -37,7 +38,6 @@ def sign_in():
             response.set_cookie('accessToken', data['accessToken'], max_age=60*60*2)
         return response_200(response, data)
     except Exception as e:
-        print(e)
         return response_error(response, e) 
 
 @bp.route('/sign-up', methods=['POST'])
@@ -57,7 +57,7 @@ def get_lecture():
     response = make_response()
     args = request.args
     department = args.get('department')
-    grade = int(args.get('grade'))
+    grade = args.get('grade')
     professor = args.get('professor')
     title = args.get('title')
     lecture_id = args.get('lecture_id')

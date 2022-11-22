@@ -21,7 +21,6 @@ class Student(BaseModel):
     password: str
     name: Optional[str]
     grade: Optional[int]
-    credit: Optional[int]
 
 class Lecture(BaseModel):
     department: str
@@ -31,7 +30,6 @@ class Lecture(BaseModel):
     lecture_id: str
     professor: str
     quota: int
-    attendance: int
 
 class Attendance(BaseModel):
     leture_id: str
@@ -91,7 +89,7 @@ def sign_up(student: Student):
         conn.commit()
     return data
 
-def get_lecture(department: str, grade: int, professor: str, title: str, lecture_id: str):
+def get_lecture(department: str, grade: str, professor: str, title: str, lecture_id: str):
     data = {'error': None, 'data': []}
     c.execute(
         'select * from lecture;'

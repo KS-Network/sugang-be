@@ -13,7 +13,7 @@ def sign_up(student: model.Student):
     data = model.sign_up(student)
     return data
 
-def get_lecture(department: str, grade: int, professor: str, title: str, lecture_id: str):
+def get_lecture(department: str, grade: str, professor: str, title: str, lecture_id: str):
     data = model.get_lecture(department, grade, professor, title, lecture_id)
     return data
 
