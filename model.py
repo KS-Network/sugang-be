@@ -1,3 +1,4 @@
+import os
 import psycopg2
 import json
 from typing import Optional, List
@@ -6,11 +7,11 @@ from flask import make_response, request
 import jwt, hashlib
 
 conn = psycopg2.connect(
-    host="ks-network-db-main.cos6nwim2e2b.ap-northeast-2.rds.amazonaws.com",
-    dbname="ksnetwork",
-    user="blue",
-    password="toor1234",
-    port="5432"
+    host=os.environ['host'],
+    dbname=os.environ['dbname'],
+    user=os.environ['user'],
+    password=os.environ['password'],
+    port=os.environ['port']
 )
 c = conn.cursor()
 
