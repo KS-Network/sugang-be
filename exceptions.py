@@ -27,3 +27,10 @@ class RequestTimeError(Exception):
         self.message = 'lecture reservation is only available between 09:00 ~ 18:00'
         self.status = 400
         super().__init__(self.message)
+
+class VerificationError(Exception):
+    def __init__(self):
+        self.message = 'student must sign in'
+        self.status = 401
+        super().__init__(self.message)
+
