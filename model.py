@@ -117,6 +117,28 @@ def get_lecture(department: str, grade: str, professor: str, title: str, lecture
 
 def get_student_lecture(student_id: str):
     data = {'error': None, 'data': []}
+    c.execute(
+        '''select department, grade, credit, title, l.lecture_id, professor, quota
+        from attendance a
+        left outer join lecture l on a.lecture_id=l.lecture_id
+        where student_id=%s;''',
+        (student_id, )
+    )
+    result = c.fetchall()
+    if result:
+        arr = []
+        for temp in result:
+            lecture = Lecture(
+                department=temp[0],
+                grade=temp[1],
+                credit=temp[2],
+                title=temp[3],
+                lecture_id=temp[4],
+                professor=temp[5],
+                quota=temp[6]
+            )
+            arr.append(lecture.dict())
+        data['data'] = arr
     return data
 
 def post_attendance(attendance: Attendance):
