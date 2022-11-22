@@ -35,7 +35,7 @@ def sign_in():
     try:
         data = service.sign_in(student)
         if data['success'] == True:
-            response.set_cookie('accessToken', data['accessToken'], max_age=60*60*2)
+            response.set_cookie('studentToken', data['accessToken'], max_age=60*60*2)
         return response_200(response, data)
     except Exception as e:
         return response_error(response, e) 
@@ -47,7 +47,7 @@ def sign_up():
     try:
         data = service.sign_up(student)
         if data['success'] == True:
-            response.set_cookie('accessToken', data['accessToken'], max_age=60*60*2)
+            response.set_cookie('studentToken', data['accessToken'], max_age=60*60*2)
         return response_200(response, data)
     except Exception as e:
         return response_error(response, e) 

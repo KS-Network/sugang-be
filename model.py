@@ -49,7 +49,7 @@ def get_attendance(lecture_id: str):
     return int(result[0][0])
 
 def verify():
-    encoded = request.cookies.get('accessToken')
+    encoded = request.cookies.get('studentToken')
     if not encoded: return False
     decoded = jwt.decode(encoded, 'JEfWefI0E1qlnIz06qmob7cZp5IzH/i7KwOI2xqWfhE=', algorithms=["HS256"])
     try:
@@ -76,7 +76,7 @@ def sign_in(student: Student):
         student_id = result[0][0]
         encoded = jwt.encode({'student_id': student_id}, 'JEfWefI0E1qlnIz06qmob7cZp5IzH/i7KwOI2xqWfhE=', algorithm='HS256')
         data['success'] = True
-        data['accessToken'] = encoded
+        data['studentToken'] = encoded
     return data
 
 def sign_up(student: Student):
@@ -92,7 +92,7 @@ def sign_up(student: Student):
         conn.commit()
         encoded = jwt.encode({'student_id': student.student_id}, 'JEfWefI0E1qlnIz06qmob7cZp5IzH/i7KwOI2xqWfhE=', algorithm='HS256')
         data['success'] = True
-        data['accessToken'] = encoded
+        data['studentToken'] = encoded
     except Exception as e:
         conn.commit()
     return data
