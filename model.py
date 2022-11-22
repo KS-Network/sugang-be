@@ -91,7 +91,7 @@ def sign_up(student: Student):
         conn.commit()
     return data
 
-def get_lecture(department, grade, professor, title, lecture_id):
+def get_lecture(department: str, grade: int, professor: str, title: str, lecture_id: str):
     data = {'error': None, 'data': []}
     c.execute(
         'select * from lecture;'
@@ -117,6 +117,10 @@ def get_lecture(department, grade, professor, title, lecture_id):
             cond_lecture_id = lecture_id==lecture.lecture_id if lecture_id else True
             if cond_department and cond_grade and cond_professor and cond_title and cond_lecture_id: arr.append(lecture.dict())
         data['data'] = arr
+    return data
+
+def get_student_lecture(student_id: str):
+    data = {'error': None, 'data': []}
     return data
 
 def post_attendance(attendance: Attendance):

@@ -13,8 +13,12 @@ def sign_up(student: model.Student):
     data = model.sign_up(student)
     return data
 
-def get_lecture(department, grade, professor, title, lecture_id):
+def get_lecture(department: str, grade: int, professor: str, title: str, lecture_id: str):
     data = model.get_lecture(department, grade, professor, title, lecture_id)
+    return data
+
+def get_student_lecture(student_id):
+    data = model.get_student_lecture(student_id)
     return data
 
 def post_attendance(attendance: model.Attendance):

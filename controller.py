@@ -57,12 +57,23 @@ def get_lecture():
     response = make_response()
     args = request.args
     department = args.get('department')
-    grade = args.get('grade')
+    grade = int(args.get('grade'))
     professor = args.get('professor')
     title = args.get('title')
     lecture_id = args.get('lecture_id')
     try:
         data = service.get_lecture(department, grade, professor, title, lecture_id)
+        return response_200(response, data)
+    except Exception as e:
+        return response_error(response, e)
+
+@bp.route('/student-lecture', methods=['GET'])
+def get_student_lecture():
+    response = make_response()
+    args = request.args
+    student_id = args.get('student_id')
+    try:
+        data = service.get_student_lecture(student_id)
         return response_200(response, data)
     except Exception as e:
         return response_error(response, e)
