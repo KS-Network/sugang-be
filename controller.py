@@ -5,7 +5,7 @@ import model
 import json
 import exceptions
 
-bp = Blueprint('main', __name__, url_prefix='')
+bp = Blueprint('main', __name__, url_prefix='/api')
 
 def response_200(response, data):
     response.data = json.dumps(data)
