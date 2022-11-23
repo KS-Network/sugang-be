@@ -47,9 +47,10 @@ def post_attendance(attendance: model.Attendance):
     time = model.get_time()
     if not model.check_time(): raise exceptions.RequestTimeError(time['start'], time['end'])
     if not model.lecture_exists(attendance.lecture_id): raise exceptions.LectureNotFoundError(attendance.lecture_id)
-    if model.attendance_exists(attendance.lecture_id): raise exceptions.AttendanceOverlapError
+    if model.student_attendance_exists(attendance.lecture_id, attendance.student_id): raise exceptions.AttendanceOverlapError
     if not model.grade_qualified(attendance.lecture_id, attendance.student_id): raise exceptions.GradeNotQualifiedError(str(model.get_lecture_grade(attendance.lecture_id)))
     if model.get_credit(attendance.student_id)>=9: raise exceptions.CreditOverLimitError
+    if model.quota_exceeded(attendance.lecture_id): raise exceptions.QuotaError
     data = model.post_attendance(attendance)
     return data
 

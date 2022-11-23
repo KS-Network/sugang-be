@@ -65,6 +65,17 @@ def attendance_exists(lecture_id: str):
     except Exception as e:
         return False
 
+def student_attendance_exists(lecture_id: str, student_id: str):
+    try:
+        c.execute(
+            'select lecture_id from attendance where lecture_id=%s and student_id=%s',
+            (lecture_id, student_id)
+        )
+        result = c.fetchall()
+        return result
+    except Exception as e:
+        return False
+
 def check_time():
     try:
         cur_time = int(datetime.now().strftime('%H%M'))
@@ -104,16 +115,43 @@ def grade_qualified(lecture_id: str, student_id: str):
     student_grade = get_student_grade(student_id)
     return lecture_grade == student_grade
 
-def get_credit(student_id):
+def get_credit(student_id: str):
     try:
         c.execute(
             'select sum(l.credit) from attendance a left outer join lecture l on a.lecture_id=l.lecture_id where a.student_id=%s',
             (student_id, )
         )
         result = c.fetchall()
-        return result[0][0] 
+        return result[0][0] if result[0][0] else 0
     except Exception as e:
         return 0
+
+def get_quota(lecture_id: str):
+    try:
+        c.execute(
+            'select quota from lecture where lecture_id=%s',
+            (lecture_id, )
+        )
+        result = c.fetchall()
+        return result[0][0]
+    except Exception as e:
+        return 0
+
+def get_attendance(lecture_id: str):
+    try:
+        c.execute(
+            'select count(*) from attendance where lecture_id=%s;',
+            (lecture_id, )
+        )
+        result = c.fetchall()
+        return result[0][0] if result[0][0] else 0
+    except Exception as e:
+        return 0
+
+def quota_exceeded(lecture_id: str):
+    quota = get_quota(lecture_id)
+    attendance = get_attendance(lecture_id)
+    return quota <= attendance
 
 def get_time():
     try:
@@ -133,14 +171,6 @@ def put_time(time):
         print(e)
         pass
     return data
-
-def get_attendance(lecture_id: str):
-    c.execute(
-        'select count(*) from attendance where lecture_id=%s;',
-        (lecture_id, )
-    )
-    result = c.fetchall()
-    return int(result[0][0])
 
 def verify():
     encoded = request.cookies.get('studentToken')

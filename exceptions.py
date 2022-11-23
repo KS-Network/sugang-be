@@ -17,8 +17,8 @@ class CreditOverLimitError(Exception):
         super().__init__(self.message)
 
 class QuotaError(Exception):
-    def __init__(self, quota):
-        self.message = 'lecture has met '+quota+' students limit'
+    def __init__(self):
+        self.message = 'lecture has met students limit'
         self.status = 400
         super().__init__(self.message)
 
