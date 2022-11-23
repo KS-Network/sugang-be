@@ -42,7 +42,7 @@ class VerificationError(Exception):
 
 class AttendanceOverlapError(Exception):
     def __init__(self):
-        self.message = 'you already have requested for this lecture' 
+        self.message = 'you already attend this lecture' 
         self.status = 400
         super().__init__(self.message)
 

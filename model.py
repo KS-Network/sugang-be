@@ -54,6 +54,17 @@ def lecture_exists(lecture_id: str):
     except Exception as e:
         return False
 
+def attendance_overlap(lecture_id: str):
+    try:
+        c.execute(
+            'select lecture_id from attendance where lecture_id=%s',
+            (lecture_id, )
+        )
+        result = c.fetchall()
+        return result
+    except Exception as e:
+        return False
+
 def check_time():
     try:
         cur_time = int(datetime.now().strftime('%H%M'))

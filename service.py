@@ -42,6 +42,7 @@ def post_attendance(attendance: model.Attendance):
     time = model.get_time()
     if not model.check_time(): raise exceptions.RequestTimeError(time['start'], time['end'])
     if not model.lecture_exists(attendance.lecture_id): raise exceptions.LectureNotFoundError(attendance.lecture_id)
+    if model.attendance_overlap(attendance.lecture_id): raise exceptions.AttendanceOverlapError
     data = model.post_attendance(attendance)
     return data
 
