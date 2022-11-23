@@ -6,7 +6,7 @@ class StudentAlreadyExistsError(Exception):
 
 class GradeNotQualifiedError(Exception):
     def __init__(self, grade):
-        self.message = 'only '+grade+' grade student can attend this lecture'
+        self.message = 'only grade '+grade+' students can attend this lecture'
         self.status = 400
         super().__init__(self.message)
 

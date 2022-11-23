@@ -77,6 +77,33 @@ def check_time():
     except Exception as e:
         return False
 
+def get_lecture_grade(lecture_id: str):
+    try:
+        c.execute(
+            'select grade from lecture where lecture_id=%s',
+            (lecture_id, )
+        )
+        result = c.fetchall()
+        return result[0][0]
+    except Exception as e:
+        return None
+
+def get_student_grade(student_id: str):
+    try:
+        c.execute(
+            'select grade from student where student_id=%s',
+            (student_id, )
+        )
+        result = c.fetchall()
+        return result[0][0]
+    except Exception as e:
+        return None
+
+def grade_qualified(lecture_id: str, student_id: str):
+    lecture_grade = get_lecture_grade(lecture_id)
+    student_grade = get_student_grade(student_id)
+    return lecture_grade == student_grade
+
 def get_time():
     try:
         with open('time.json', 'r') as file:
