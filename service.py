@@ -27,6 +27,11 @@ def put_lecture(lecture: model.Lecture):
     data = model.put_lecture(lecture)
     return data
 
+def delete_lecture(lecture_id: str):
+    if not model.verify_admin(): raise exceptions.VerificationError('admin')
+    data = model.delete_lecture(lecture_id)
+    return data
+
 def get_student_lecture(student_id):
     if not model.verify(): raise exceptions.VerificationError('student')
     data = model.get_student_lecture(student_id)

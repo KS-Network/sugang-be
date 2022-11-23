@@ -89,6 +89,17 @@ def put_lecture():
     except Exception as e:
         return response_error(response, e)
 
+@bp.route('/lecture', methods=['DELETE'])
+def delete_lecture():
+    response = make_response()
+    args = request.args
+    lecture_id = args.get('lecture_id')
+    try:
+        data = service.delete_lecture(lecture_id)
+        return response_200(response, data)
+    except Exception as e:
+        return response_error(response, e)
+
 @bp.route('/student-lecture', methods=['GET'])
 def get_student_lecture():
     response = make_response()

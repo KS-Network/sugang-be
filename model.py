@@ -5,6 +5,8 @@ from typing import Optional, List
 from pydantic import BaseModel
 from flask import make_response, request
 import jwt, hashlib
+import smtplib
+from email.mime.text import MIMEText
 
 conn = psycopg2.connect(
     host=os.environ['host'],
@@ -170,7 +172,39 @@ def put_lecture(lecture: Lecture):
     except Exception as e:
         conn.commit()
     return data
-        
+
+def delete_lecture(lecture_id: str):
+    data = {'error': None, 'success': False}
+    try:
+        c.execute(
+            '''select s.student_id, s.email 
+            from attendance a left outer join student s on a.student_id=s.student_id
+            where a.lecture_id=%s''',
+            (lecture_id, )
+        )
+        result = c.fetchall()
+        if result:
+            smtp = smtplib.SMTP('smtp.gmail.com', 587)
+            #smtp.connect("smtp.gmail.com",587)
+            smtp.ehlo()
+            smtp.starttls()
+            smtp.login('oponeuser7@gmail.com', 'viybvtoplvjuxjhr')
+            msg = MIMEText('안녕하세요. 충남대학교입니다.\n학생께서 수강신청하신 '+lecture_id+' 번 과목이 폐강되었음을 알립니다.')
+            msg['Subject'] = '[충남대학교]폐강 알림'
+            for student in result:
+                email = student[1]
+                smtp.sendmail('oponeuser7@gmail.com', email, msg.as_string())
+            smtp.quit()
+        c.execute(
+            'delete from lecture where lecture_id=%s',
+            (lecture_id, )
+        )
+        conn.commit()
+        data['success'] = True
+    except Exception as e:
+        print(e)
+        conn.commit()
+    return data
 
 def get_student_lecture(student_id: str):
     data = {'error': None, 'data': []}
