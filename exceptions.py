@@ -29,8 +29,8 @@ class LectureNotFoundError(Exception):
         super().__init__(self.message)
 
 class RequestTimeError(Exception):
-    def __init__(self):
-        self.message = 'lecture reservation is only available between 09:00 ~ 18:00'
+    def __init__(self, start_time, end_time):
+        self.message = 'lecture reservation is only available between '+start_time+' ~ '+end_time
         self.status = 400
         super().__init__(self.message)
 

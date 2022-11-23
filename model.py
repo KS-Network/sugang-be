@@ -46,7 +46,7 @@ class Admin(BaseModel):
 def check_time():
     try:
         cur_time = int(datetime.now().strftime('%H%M'))
-        with open('time.json') as file:
+        with open('time.json', 'r') as file:
             time = json.load(file)
         if time: 
             start_time = int(time['start'])
@@ -54,6 +54,25 @@ def check_time():
             return start_time <= cur_time <= end_time
     except Exception as e:
         return False
+
+def get_time():
+    try:
+        with open('time.json', 'r') as file:
+            time = json.load(file)
+            return time
+    except Exception as e:
+        return {}
+
+def put_time(time):
+    data = {'error': None, 'success': False}
+    try:
+        with open('time.json', 'w') as file:
+            file.write(json.dumps(time))
+        data['success'] = True
+    except Exception as e:
+        print(e)
+        pass
+    return data
 
 def get_attendance(lecture_id: str):
     c.execute(

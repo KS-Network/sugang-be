@@ -133,3 +133,13 @@ def delete_attendance():
     except Exception as e:
         return response_error(response, e)
 
+@bp.route('/time', methods=['PUT'])
+def put_time():
+    response = make_response()
+    time = request.get_json()
+    try:
+        data = service.put_time(time)
+        return response_200(response, data)
+    except Exception as e:
+        return response_error(response, e)
+

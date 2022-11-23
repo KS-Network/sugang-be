@@ -32,19 +32,25 @@ def delete_lecture(lecture_id: str):
     data = model.delete_lecture(lecture_id)
     return data
 
-def get_student_lecture(student_id):
+def get_student_lecture(student_id: str):
     if not model.verify(): raise exceptions.VerificationError('student')
     data = model.get_student_lecture(student_id)
     return data
 
 def post_attendance(attendance: model.Attendance):
     if not model.verify(): raise exceptions.VerificationError('student')
-    if not model.check_time(): raise exceptions.RequestTimeError
+    time = model.get_time()
+    if not model.check_time(): raise exceptions.RequestTimeError(time['start'], time['end'])
     data = model.post_attendance(attendance)
     return data
 
 def delete_attendance(lecture_id: str, student_id: str):
     if not model.verify(): raise exceptions.VerificationError('student')
     data = model.delete_attendance(lecture_id, student_id)
+    return data
+
+def put_time(time):
+    if not model.verify_admin(): raise exceptions.VerificationError('admin')
+    data = model.put_time(time)
     return data
 
