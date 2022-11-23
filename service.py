@@ -3,6 +3,8 @@ import json
 from flask import make_response
 import exceptions
 
+#이 파일은 각각 API들에 대하여 예외 처리를 담당하는 로직을 포함하고 있다.
+
 def verify():
     return model.verify()
 

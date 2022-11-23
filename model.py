@@ -9,23 +9,24 @@ import smtplib
 from email.mime.text import MIMEText
 from datetime import datetime
 
-conn = psycopg2.connect(
+conn = psycopg2.connect( #데이터베이스 연결
     host=os.environ['host'],
     dbname=os.environ['dbname'],
     user=os.environ['user'],
     password=os.environ['password'],
     port=os.environ['port']
 )
-c = conn.cursor()
+c = conn.cursor() #데이터베이스 연결
 
-class Student(BaseModel):
+#이 클래스들은 타이핑 및 데이터베이스에 정의된 모델을 활용하기 위함
+class Student(BaseModel): # 학생 클래스
     email: Optional[str]
     student_id: str
     password: str
     name: Optional[str]
     grade: Optional[int]
 
-class Lecture(BaseModel):
+class Lecture(BaseModel): #강의 클래스
     department: str
     grade: int
     credit: int
@@ -35,14 +36,15 @@ class Lecture(BaseModel):
     quota: int
     attendance: Optional[str]
 
-class Attendance(BaseModel):
+class Attendance(BaseModel): #수강신청 클래스
     lecture_id: str
     student_id: str
 
-class Admin(BaseModel):
+class Admin(BaseModel): #관리자 클래스
     email: str
     password: str
 
+#해당하는 강의가 존재하는지 확인하는 함수
 def lecture_exists(lecture_id: str):
     try:
         c.execute(
@@ -54,6 +56,7 @@ def lecture_exists(lecture_id: str):
     except Exception as e:
         return False
 
+#해당하는 수강신청 내역이 존재하는지 확인하는 함수
 def attendance_exists(lecture_id: str):
     try:
         c.execute(
@@ -65,6 +68,7 @@ def attendance_exists(lecture_id: str):
     except Exception as e:
         return False
 
+#학생이 해당 강의에 대해서 이미 수강신청을 했는지 확인하는 함수
 def student_attendance_exists(lecture_id: str, student_id: str):
     try:
         c.execute(
@@ -76,6 +80,7 @@ def student_attendance_exists(lecture_id: str, student_id: str):
     except Exception as e:
         return False
 
+#현재 수강신청 가능한 시간인지 확인하는 함수
 def check_time():
     try:
         cur_time = int(datetime.now().strftime('%H%M'))
@@ -88,6 +93,7 @@ def check_time():
     except Exception as e:
         return False
 
+#강의의 수강 가능 학년을 가져오는 함수
 def get_lecture_grade(lecture_id: str):
     try:
         c.execute(
@@ -99,6 +105,7 @@ def get_lecture_grade(lecture_id: str):
     except Exception as e:
         return None
 
+#학생의 학년을 가져오는 함수
 def get_student_grade(student_id: str):
     try:
         c.execute(
@@ -110,11 +117,13 @@ def get_student_grade(student_id: str):
     except Exception as e:
         return None
 
+#학생이 신청하고자 하는 강의의 요구 학년에 부합하는지 확인하는 함수
 def grade_qualified(lecture_id: str, student_id: str):
     lecture_grade = get_lecture_grade(lecture_id)
     student_grade = get_student_grade(student_id)
     return lecture_grade == student_grade
 
+#학생의 현재 신청 학점을 계산하는 함수
 def get_credit(student_id: str):
     try:
         c.execute(
@@ -126,6 +135,7 @@ def get_credit(student_id: str):
     except Exception as e:
         return 0
 
+#강의의 수강신청 정원을 가져오는 함수
 def get_quota(lecture_id: str):
     try:
         c.execute(
@@ -137,6 +147,7 @@ def get_quota(lecture_id: str):
     except Exception as e:
         return 0
 
+#강의의 현재 수강신청 인원을 가져오는 함수
 def get_attendance(lecture_id: str):
     try:
         c.execute(
@@ -148,11 +159,13 @@ def get_attendance(lecture_id: str):
     except Exception as e:
         return 0
 
+#강의의 수강신청 정원이 꽉 찼는지 확인하는 함수
 def quota_exceeded(lecture_id: str):
     quota = get_quota(lecture_id)
     attendance = get_attendance(lecture_id)
     return quota <= attendance
 
+#현재 수강 신청 가능 시간을 가져오는 함수
 def get_time():
     try:
         with open('time.json', 'r') as file:
@@ -161,6 +174,7 @@ def get_time():
     except Exception as e:
         return {}
 
+#수강신청 가능 시간을 변경하는 함수
 def put_time(time):
     data = {'error': None, 'success': False}
     try:
@@ -172,6 +186,7 @@ def put_time(time):
         pass
     return data
 
+#로그인 여부를 확인하는 함수
 def verify():
     encoded = request.cookies.get('studentToken')
     if not encoded: return False
