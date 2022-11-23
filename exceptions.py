@@ -16,6 +16,12 @@ class CreditOverLimitError(Exception):
         self.status = 400
         super().__init__(self.message)
 
+class QuotaError(Exception):
+    def __init__(self, quota):
+        self.message = 'lecture has met '+quota+' students limit'
+        self.status = 400
+        super().__init__(self.message)
+
 class LectureNotFoundError(Exception):
     def __init__(self, lecture_id):
         self.message = 'cannot find lecture '+lecture_id
@@ -32,5 +38,11 @@ class VerificationError(Exception):
     def __init__(self):
         self.message = 'student must sign in'
         self.status = 401
+        super().__init__(self.message)
+
+class AttendanceOverlapError(Exception):
+    def __init__(self):
+        self.message = 'you already have requested for this lecture' 
+        self.status = 400
         super().__init__(self.message)
 
