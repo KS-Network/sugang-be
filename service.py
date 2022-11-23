@@ -22,18 +22,23 @@ def get_lecture(department: str, grade: str, professor: str, title: str, lecture
     data = model.get_lecture(department, grade, professor, title, lecture_id)
     return data
 
+def put_lecture(lecture: model.Lecture):
+    if not model.verify_admin(): raise exceptions.VerificationError('admin')
+    data = model.put_lecture(lecture)
+    return data
+
 def get_student_lecture(student_id):
-    if not model.verify(): raise exceptions.VerificationError
+    if not model.verify(): raise exceptions.VerificationError('student')
     data = model.get_student_lecture(student_id)
     return data
 
 def post_attendance(attendance: model.Attendance):
-    if not model.verify(): raise exceptions.VerificationError
+    if not model.verify(): raise exceptions.VerificationError('student')
     data = model.post_attendance(attendance)
     return data
 
 def delete_attendance(lecture_id: str, student_id: str):
-    if not model.verify(): raise exceptions.VerificationError
+    if not model.verify(): raise exceptions.VerificationError('student')
     data = model.delete_attendance(lecture_id, student_id)
     return data
 

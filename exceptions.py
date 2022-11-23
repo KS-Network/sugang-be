@@ -35,8 +35,8 @@ class RequestTimeError(Exception):
         super().__init__(self.message)
 
 class VerificationError(Exception):
-    def __init__(self):
-        self.message = 'student must sign in'
+    def __init__(self, role):
+        self.message = role+' must sign in'
         self.status = 401
         super().__init__(self.message)
 

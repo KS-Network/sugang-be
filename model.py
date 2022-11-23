@@ -30,7 +30,7 @@ class Lecture(BaseModel):
     lecture_id: str
     professor: str
     quota: int
-    attendance: str
+    attendance: Optional[str]
 
 class Attendance(BaseModel):
     lecture_id: str
@@ -62,7 +62,7 @@ def verify():
     except Exception as e:
         return False
 
-def admin_verify():
+def verify_admin():
     encoded = request.cookies.get('adminToken')
     if not encoded: return False
     decoded = jwt.decode(encoded, 'JEfWefI0E1qlnIz06qmob7cZp5IzH/i7KwOI2xqWfhE=', algorithms=["HS256"])
@@ -155,6 +155,22 @@ def get_lecture(department: str, grade: str, professor: str, title: str, lecture
             if cond_department and cond_grade and cond_professor and cond_title and cond_lecture_id: arr.append(lecture.dict())
         data['data'] = arr
     return data
+
+def put_lecture(lecture: Lecture):
+    data = {'error': None, 'success': False}
+    try:
+        c.execute(
+            '''update lecture set
+            department=%s, grade=%s, credit=%s, title=%s, lecture_id=%s, professor=%s, quota=%s
+            where lecture_id=%s;''',
+            (lecture.department, lecture.grade, lecture.credit, lecture.title, lecture.lecture_id, lecture.professor, lecture.quota, lecture.lecture_id)
+        )
+        conn.commit()
+        data['success'] = True
+    except Exception as e:
+        conn.commit()
+    return data
+        
 
 def get_student_lecture(student_id: str):
     data = {'error': None, 'data': []}

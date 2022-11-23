@@ -79,6 +79,16 @@ def get_lecture():
     except Exception as e:
         return response_error(response, e)
 
+@bp.route('/lecture', methods=['PUT'])
+def put_lecture():
+    response = make_response()
+    lecture = model.Lecture(**request.get_json())
+    try:
+        data = service.put_lecture(lecture)
+        return response_200(response, data)
+    except Exception as e:
+        return response_error(response, e)
+
 @bp.route('/student-lecture', methods=['GET'])
 def get_student_lecture():
     response = make_response()
