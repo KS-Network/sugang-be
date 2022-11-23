@@ -35,10 +35,22 @@ def sign_in():
     try:
         data = service.sign_in(student)
         if data['success'] == True:
-            response.set_cookie('studentToken', data['accessToken'], max_age=60*60*2)
+            response.set_cookie('studentToken', data['studentToken'], max_age=60*60*2)
         return response_200(response, data)
     except Exception as e:
         return response_error(response, e) 
+
+@bp.route('/sign-in-admin', methods=['POST'])
+def sign_in_admin():
+    response = make_response()
+    admin = model.Admin(**request.get_json())
+    try:
+        data = service.sign_in_admin(admin)
+        if data['success'] == True:
+            response.set_cookie('adminToken', data['adminToken'], max_age=60*60*2)
+        return response_200(response, data)
+    except Exception as e:
+        return response_error(response, e)
 
 @bp.route('/sign-up', methods=['POST'])
 def sign_up():

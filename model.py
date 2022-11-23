@@ -62,6 +62,20 @@ def verify():
     except Exception as e:
         return False
 
+def admin_verify():
+    encoded = request.cookies.get('adminToken')
+    if not encoded: return False
+    decoded = jwt.decode(encoded, 'JEfWefI0E1qlnIz06qmob7cZp5IzH/i7KwOI2xqWfhE=', algorithms=["HS256"])
+    try:
+        c.execute(
+            'select * from admin where email=%s;',
+            (decoded['email'], )
+        )
+        result = c.fetchall()
+        return result
+    except Exception as e:
+        return False
+
 def sign_in(student: Student):
     data = { 'error': None, 'success': False }
     m = hashlib.sha256()
@@ -77,6 +91,23 @@ def sign_in(student: Student):
         encoded = jwt.encode({'student_id': student_id}, 'JEfWefI0E1qlnIz06qmob7cZp5IzH/i7KwOI2xqWfhE=', algorithm='HS256')
         data['success'] = True
         data['studentToken'] = encoded
+    return data
+
+def sign_in_admin(admin: Admin):
+    data = { 'error': None, 'success': False }
+    m = hashlib.sha256()
+    m.update(admin.password.encode('utf-8'))
+    admin.password = m.hexdigest()
+    c.execute(
+        'select email from admin where email=%s and password=%s;',
+        (admin.email, admin.password)
+    )
+    result = c.fetchall()
+    if result:
+        email = result[0][0]
+        encoded = jwt.encode({'email': email}, 'JEfWefI0E1qlnIz06qmob7cZp5IzH/i7KwOI2xqWfhE=', algorithm='HS256')
+        data['success'] = True
+        data['adminToken'] = encoded
     return data
 
 def sign_up(student: Student):

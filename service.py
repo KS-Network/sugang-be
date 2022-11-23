@@ -10,6 +10,10 @@ def sign_in(student: model.Student):
     data = model.sign_in(student)
     return data
 
+def sign_in_admin(admin: model.Admin):
+    data = model.sign_in_admin(admin)
+    return data
+
 def sign_up(student: model.Student):
     data = model.sign_up(student)
     return data
