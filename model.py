@@ -104,6 +104,17 @@ def grade_qualified(lecture_id: str, student_id: str):
     student_grade = get_student_grade(student_id)
     return lecture_grade == student_grade
 
+def get_credit(student_id):
+    try:
+        c.execute(
+            'select sum(l.credit) from attendance a left outer join lecture l on a.lecture_id=l.lecture_id where a.student_id=%s',
+            (student_id, )
+        )
+        result = c.fetchall()
+        return result[0][0] 
+    except Exception as e:
+        return 0
+
 def get_time():
     try:
         with open('time.json', 'r') as file:
