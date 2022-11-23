@@ -39,6 +39,7 @@ def get_student_lecture(student_id):
 
 def post_attendance(attendance: model.Attendance):
     if not model.verify(): raise exceptions.VerificationError('student')
+    if not model.check_time(): raise exceptions.RequestTimeError
     data = model.post_attendance(attendance)
     return data
 

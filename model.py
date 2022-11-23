@@ -7,6 +7,7 @@ from flask import make_response, request
 import jwt, hashlib
 import smtplib
 from email.mime.text import MIMEText
+from datetime import datetime
 
 conn = psycopg2.connect(
     host=os.environ['host'],
@@ -41,6 +42,18 @@ class Attendance(BaseModel):
 class Admin(BaseModel):
     email: str
     password: str
+
+def check_time():
+    try:
+        cur_time = int(datetime.now().strftime('%H%M'))
+        with open('time.json') as file:
+            time = json.load(file)
+        if time: 
+            start_time = int(time['start'])
+            end_time = int(time['end'])
+            return start_time <= cur_time <= end_time
+    except Exception as e:
+        return False
 
 def get_attendance(lecture_id: str):
     c.execute(
