@@ -53,7 +53,7 @@ def post_attendance(attendance: model.Attendance):
 
 def delete_attendance(lecture_id: str, student_id: str):
     if not verify(): raise exceptions.VerificationError('student')
-    if model.attendance_exists(attendance.lecture_id): raise exceptions.AttendanceOverlapError
+    if not model.attendance_exists(lecture_id): raise exceptions.AttendanceNotFoundError
     data = model.delete_attendance(lecture_id, student_id)
     return data
 

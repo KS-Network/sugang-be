@@ -46,3 +46,9 @@ class AttendanceOverlapError(Exception):
         self.status = 400
         super().__init__(self.message)
 
+class AttendanceNotFoundError(Exception):
+    def __init__(self):
+        self.message = 'cannot find attendance data'
+        self.status = 400
+        super().__init__(self.message)
+
