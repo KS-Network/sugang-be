@@ -46,8 +46,8 @@ def get_student_lecture(student_id: str):
 
 def post_attendance(attendance: model.Attendance):
     if not verify(): raise exceptions.VerificationError('student')
-    time = model.get_time()
-    if not model.check_time(): raise exceptions.RequestTimeError(time['start'], time['end'])
+    #time = model.get_time()
+    #if not model.check_time(): raise exceptions.RequestTimeError(time['start'], time['end'])
     if not model.lecture_exists(attendance.lecture_id): raise exceptions.LectureNotFoundError(attendance.lecture_id)
     if model.student_attendance_exists(attendance.lecture_id, attendance.student_id): raise exceptions.AttendanceOverlapError
     if not model.grade_qualified(attendance.lecture_id, attendance.student_id): raise exceptions.GradeNotQualifiedError(str(model.get_lecture_grade(attendance.lecture_id)))
